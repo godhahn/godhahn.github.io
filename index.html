@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pang Yi Hahn | Data Solutions Engineer</title>
+    <title>Pang Yi Hahn | Data Solutions</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,24 +11,29 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Fonts: Cormorant Garamond (Vintage Serif) & Lato (Clean Sans) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
             theme: {
                 fontFamily: {
-                    sans: ['Outfit', 'sans-serif'],
+                    serif: ['"Cormorant Garamond"', 'serif'],
+                    sans: ['"Lato"', 'sans-serif'],
                 },
                 extend: {
                     colors: {
-                        'glass': 'rgba(255, 255, 255, 0.05)',
-                        'glass-hover': 'rgba(255, 255, 255, 0.1)',
-                        'neon-blue': '#00f3ff',
-                        'neon-purple': '#bc13fe',
+                        paper: '#fdfbf7',
+                        ink: '#1a1a1a',
                     },
                     animation: {
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slow-zoom': 'zoomEffect 30s infinite alternate',
+                    },
+                    keyframes: {
+                        zoomEffect: {
+                            '0%': { transform: 'scale(1)' },
+                            '100%': { transform: 'scale(1.15)' },
+                        }
                     }
                 }
             }
@@ -37,423 +42,348 @@
     
     <style>
         body {
-            background-color: #0f172a; /* Slate 900 */
-            color: #e2e8f0;
+            background-color: #0c0a09;
+            color: #fdfbf7;
             overflow-x: hidden;
         }
 
-        /* --- Custom Scrollbar --- */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 3px; }
 
-        /* --- Animations --- */
-        .typing-cursor::after {
-            content: '|';
-            animation: blink 1s step-start infinite;
-        }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        /* Card Hover Glow Effect */
-        .glow-card {
-            transition: all 0.4s ease;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .glow-card:hover {
-            transform: translateY(-5px) scale(1.01);
-            background: rgba(255,255,255,0.08);
-            border-color: rgba(0, 243, 255, 0.3);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
-        }
-
-        /* Navigation Active State */
-        .nav-pill.active {
-            background: linear-gradient(90deg, #00f3ff, #bc13fe);
-            color: #000;
-            font-weight: 700;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
-        }
-
-        /* Canvas Background */
-        #canvas-bg {
+        /* --- Vintage Background Wrapper --- */
+        .bg-fixed-wrapper {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+        
+        .bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* UPDATED: Background image name */
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: sepia(0.4) contrast(1.1) brightness(0.8); 
+        }
+        
+        /* Grain Overlay */
+        .bg-grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
             z-index: -1;
-            opacity: 0.6;
+            pointer-events: none;
         }
 
-        /* Fade In Section */
-        .fade-section {
+        /* --- Vintage Panel Style --- */
+        .vintage-panel {
+            background: rgba(20, 18, 15, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            transition: transform 0.4s ease, background 0.4s ease;
+        }
+        
+        .vintage-panel:hover {
+            background: rgba(20, 18, 15, 0.8);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* --- Scroll Reveal --- */
+        .reveal {
             opacity: 0;
             transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transition: all 1s ease;
         }
-        .fade-section.visible {
+        .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Typewriter Cursor */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+            font-weight: 300;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .nav-link.active {
+            border-bottom: 1px solid white;
+        }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col items-center">
+<body class="antialiased font-sans selection:bg-white selection:text-black">
 
-    <!-- Interactive Background -->
-    <canvas id="canvas-bg"></canvas>
+    <!-- Backgrounds -->
+    <div class="bg-fixed-wrapper">
+        <div class="bg-image animate-slow-zoom"></div>
+    </div>
+    <div class="bg-grain"></div>
 
-    <!-- Floating Navigation -->
-    <nav class="fixed top-6 z-50 animate-bounce-in">
-        <div class="backdrop-blur-xl bg-white/5 border border-white/10 rounded-full px-2 py-2 shadow-2xl flex gap-1">
-            <button onclick="scrollToSection('home')" id="btn-home" class="nav-pill active px-5 py-2 rounded-full text-sm transition-all duration-300 hover:text-white">About</button>
-            <button onclick="scrollToSection('experience')" id="btn-experience" class="nav-pill px-5 py-2 rounded-full text-sm text-gray-400 transition-all duration-300 hover:text-white">Experience</button>
-            <button onclick="scrollToSection('projects')" id="btn-projects" class="nav-pill px-5 py-2 rounded-full text-sm text-gray-400 transition-all duration-300 hover:text-white">Projects</button>
-            <button onclick="scrollToSection('hobbies')" id="btn-hobbies" class="nav-pill px-5 py-2 rounded-full text-sm text-gray-400 transition-all duration-300 hover:text-white">Hobbies</button>
+    <!-- Navigation (Updated Order: Life before Experience) -->
+    <nav class="fixed top-0 w-full z-50 py-6 transition-all duration-300 bg-black/20 backdrop-blur-sm" id="navbar">
+        <div class="max-w-4xl mx-auto px-6 flex justify-center md:justify-end gap-10">
+            <button onclick="scrollToSection('home')" id="btn-home" class="nav-link text-white/80 hover:text-white font-serif text-xl tracking-widest uppercase pb-1 active">Home</button>
+            <button onclick="scrollToSection('hobbies')" id="btn-hobbies" class="nav-link text-white/80 hover:text-white font-serif text-xl tracking-widest uppercase pb-1">Life</button>
+            <button onclick="scrollToSection('experience')" id="btn-experience" class="nav-link text-white/80 hover:text-white font-serif text-xl tracking-widest uppercase pb-1">Experience</button>
+            <button onclick="scrollToSection('projects')" id="btn-projects" class="nav-link text-white/80 hover:text-white font-serif text-xl tracking-widest uppercase pb-1">Projects</button>
         </div>
     </nav>
 
-    <!-- Main Content Container -->
-    <main class="w-full max-w-4xl px-6 pt-32 pb-20 space-y-32">
+    <!-- Main Content -->
+    <main class="w-full max-w-3xl mx-auto px-6 pt-32 pb-32">
 
-        <!-- HOME SECTION -->
-        <section id="home" class="fade-section visible text-center relative">
+        <!-- HEADER / INTRO -->
+        <section id="home" class="min-h-[80vh] flex flex-col justify-center items-center text-center reveal active">
             
-            <!-- Glowing Photo Container -->
-            <div class="relative w-48 h-48 mx-auto mb-8 group">
-                <div class="absolute inset-0 bg-gradient-to-r from-neon-blue to-neon-purple rounded-full blur-2xl opacity-40 group-hover:opacity-70 transition-opacity duration-500 animate-pulse-slow"></div>
-                <!-- REPLACE SRC WITH YOUR PHOTO -->
-                <img src="https://ui-avatars.com/api/?name=Pang+Yi+Hahn&background=0f172a&color=00f3ff&size=256&bold=true" 
-                     alt="Profile" 
-                     class="relative w-48 h-48 rounded-full object-cover border-2 border-white/20 shadow-2xl z-10">
+            <div class="w-48 h-48 rounded-full overflow-hidden border border-white/30 mb-10 shadow-2xl relative group p-1">
+                <img src="profile.jpg" alt="Pang Yi Hahn" class="w-full h-full object-cover rounded-full opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 grayscale hover:grayscale-0">
             </div>
 
-            <h1 class="text-6xl md:text-7xl font-extrabold mb-4 tracking-tight text-white drop-shadow-lg">
+            <h1 class="font-serif text-6xl md:text-8xl text-white mb-6 tracking-wide leading-none drop-shadow-xl">
                 Pang Yi Hahn
             </h1>
             
-            <div class="inline-block bg-white/5 backdrop-blur border border-white/10 px-6 py-2 rounded-full mb-8">
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple font-bold text-lg md:text-xl">
-                    Final Year Engineering + Data | NUS ASEAN Scholar
-                </span>
+            <div class="h-8 mb-12">
+                <span id="typewriter" class="font-serif italic text-2xl md:text-3xl text-white/80 tracking-wide typing-cursor"></span>
             </div>
 
-            <p class="text-xl text-gray-400 min-h-[30px] font-light">
-                <span id="typewriter" class="typing-cursor"></span>
-            </p>
-
             <!-- Social Links -->
-            <div class="flex justify-center gap-6 mt-10">
-                <a href="https://github.com/godhahn" target="_blank" class="text-gray-400 hover:text-white hover:scale-110 transition-transform text-3xl"><i class="fab fa-github"></i></a>
-                <a href="https://linkedin.com/in/yi-hahn-pang-" target="_blank" class="text-gray-400 hover:text-neon-blue hover:scale-110 transition-transform text-3xl"><i class="fab fa-linkedin"></i></a>
-                <a href="mailto:yihahn.pang@gmail.com" class="text-gray-400 hover:text-neon-purple hover:scale-110 transition-transform text-3xl"><i class="fas fa-envelope"></i></a>
+            <div class="flex gap-10">
+                <a href="https://github.com/godhahn" target="_blank" class="text-white/60 hover:text-white transition-colors text-2xl"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com/in/yi-hahn-pang-" target="_blank" class="text-white/60 hover:text-white transition-colors text-2xl"><i class="fab fa-linkedin"></i></a>
+                <a href="mailto:yihahn.pang@gmail.com" class="text-white/60 hover:text-white transition-colors text-2xl"><i class="fas fa-envelope"></i></a>
             </div>
         </section>
 
 
-        <!-- EXPERIENCE SECTION -->
-        <section id="experience" class="fade-section">
-            <h2 class="text-4xl font-bold mb-12 flex items-center gap-4 text-white">
-                <span class="w-2 h-10 bg-gradient-to-b from-neon-blue to-neon-purple rounded-full block"></span>
-                Work Experience
-            </h2>
+        <!-- LIFE (Moved to Top) -->
+        <section id="hobbies" class="py-24 reveal">
+            <div class="mb-16 border-b border-white/10 pb-6 inline-block">
+                <h2 class="font-serif text-5xl text-white italic">Life</h2>
+                <!-- Added Bio Here -->
+                <p class="font-serif text-xl text-white/70 mt-4 italic">Certified Diver & Climber. Food Enjoyer.</p>
+            </div>
 
-            <div class="space-y-8 border-l border-white/10 ml-3 pl-8 md:pl-12 relative">
-                
-                <!-- Job 1 -->
-                <div class="glow-card bg-glass rounded-2xl p-8 relative">
-                    <div class="absolute -left-[3.25rem] md:-left-[4.25rem] top-8 w-6 h-6 bg-slate-900 border-2 border-neon-blue rounded-full shadow-[0_0_10px_#00f3ff]"></div>
-                    
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-                        <div>
-                            <h3 class="text-2xl font-bold text-white">Data Engineer Intern</h3>
-                            <div class="text-neon-blue font-semibold">Climate Impact X</div>
-                        </div>
-                        <span class="text-xs bg-white/10 text-white px-3 py-1 rounded-full border border-white/5 mt-2 md:mt-0">Jan 2026 (Incoming)</span>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Basketball -->
+                <div class="group relative h-96 overflow-hidden rounded-sm cursor-pointer vintage-panel border-0 p-0">
+                    <img src="basketball.jpg" alt="Basketball" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100 sepia-[0.3]">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-90"></div>
+                    <div class="absolute bottom-0 p-8">
+                        <h3 class="font-serif text-3xl text-white mb-1">Basketball</h3>
                     </div>
-                    <ul class="space-y-3 text-gray-300 list-disc ml-5 leading-relaxed">
-                        <li>Invited to return to the company following the previous internship, recognized for strong contributions, technical expertise, proactiveness, quick learning, and effective collaboration with stakeholders.</li>
+                </div>
+
+                <!-- Chess -->
+                <div class="group relative h-96 overflow-hidden rounded-sm cursor-pointer vintage-panel border-0 p-0">
+                    <img src="chess.jpg" alt="Chess" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100 sepia-[0.3]">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-90"></div>
+                    <div class="absolute bottom-0 p-8">
+                        <h3 class="font-serif text-3xl text-white mb-1">Chess</h3>
+                    </div>
+                </div>
+
+                <!-- Climbing -->
+                <div class="group relative h-96 overflow-hidden rounded-sm cursor-pointer vintage-panel border-0 p-0">
+                    <img src="climbing.jpg" alt="Climbing" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100 sepia-[0.3]">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-90"></div>
+                    <div class="absolute bottom-0 p-8">
+                        <h3 class="font-serif text-3xl text-white mb-1">Climbing</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- EXPERIENCE -->
+        <section id="experience" class="py-24 reveal">
+            <h2 class="font-serif text-5xl text-white mb-16 border-b border-white/10 pb-4 inline-block italic">Experience</h2>
+
+            <div class="space-y-12">
+                <!-- Job 1 -->
+                <div class="vintage-panel p-8 md:p-10 rounded-sm relative">
+                    <div class="flex flex-col md:flex-row justify-between items-baseline mb-4">
+                        <h3 class="font-serif text-3xl text-white">Data Engineer Intern</h3>
+                        <span class="font-serif italic text-lg text-white/60 mt-2 md:mt-0">Climate Impact X &nbsp;|&nbsp; Starting: Jan 2026</span>
+                    </div>
+                    <ul class="space-y-3 font-serif text-xl text-white/80 leading-relaxed list-none ml-2">
+                        <li>• Invited to return to the company following the previous internship, recognized for strong contributions, technical expertise, proactiveness, quick learning, and effective collaboration with stakeholders.</li>
                     </ul>
                 </div>
 
                 <!-- Job 2 -->
-                <div class="glow-card bg-glass rounded-2xl p-8 relative">
-                    <div class="absolute -left-[3.25rem] md:-left-[4.25rem] top-8 w-6 h-6 bg-slate-900 border-2 border-white/30 rounded-full"></div>
-                    
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-                        <div>
-                            <h3 class="text-2xl font-bold text-white">Data Engineer Intern</h3>
-                            <div class="text-neon-blue font-semibold">Climate Impact X</div>
-                        </div>
-                        <span class="text-xs bg-white/10 text-white px-3 py-1 rounded-full border border-white/5 mt-2 md:mt-0">Jan 2025 – Jun 2025</span>
+                <div class="vintage-panel p-8 md:p-10 rounded-sm relative">
+                    <div class="flex flex-col md:flex-row justify-between items-baseline mb-4">
+                        <h3 class="font-serif text-3xl text-white">Data Engineer Intern</h3>
+                        <span class="font-serif italic text-lg text-white/60 mt-2 md:mt-0">Climate Impact X &nbsp;|&nbsp; Jan 2025 – Jun 2025</span>
                     </div>
-                    <ul class="space-y-3 text-gray-300 list-disc ml-5 leading-relaxed">
-                        <li>Built 18 automated ETL pipelines using Airflow/PySpark/Azure to ingest carbon credit data into ADLS/Snowflake/MongoDB, eliminating 10+ manual hours weekly</li>
-                        <li>Redesigned Snowflake data architecture by consolidating 40+ views/tables into optimized staging views and business-ready models, reducing storage costs by 65% and improving query performance</li>
-                        <li>Implemented an improved scraping method for carbon registry datasets, resolving 80-90 missing data entries</li>
-                        <li>Developed dbt tests and Snowflake monitoring dashboards, which flagged a major SQL logic error and improved data quality</li>
-                        <li>Engineered 2 CI/CD pipelines with Git/Bash/Azure DevOps to automate cloud infrastructure deployment</li>
+                    <ul class="space-y-3 font-serif text-xl text-white/80 leading-relaxed list-none ml-2">
+                        <li>• Built 18 automated ETL pipelines using Airflow/PySpark/Azure to ingest carbon credit data into ADLS/Snowflake/MongoDB, eliminating 10+ manual hours weekly</li>
+                        <li>• Redesigned Snowflake data architecture by consolidating 40+ views/tables into optimized staging views and business-ready models, reducing storage costs by 65% and improving query performance</li>
+                        <li>• Implemented an improved scraping method for carbon registry datasets, resolving 80-90 missing data entries</li>
+                        <li>• Developed dbt tests and Snowflake monitoring dashboards, which flagged a major SQL logic error and improved data quality</li>
+                        <li>• Engineered 2 CI/CD pipelines with Git/Bash/Azure DevOps to automate cloud infrastructure deployment</li>
                     </ul>
                 </div>
 
                 <!-- Job 3 -->
-                <div class="glow-card bg-glass rounded-2xl p-8 relative">
-                    <div class="absolute -left-[3.25rem] md:-left-[4.25rem] top-8 w-6 h-6 bg-slate-900 border-2 border-white/30 rounded-full"></div>
-                    
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-                        <div>
-                            <h3 class="text-2xl font-bold text-white">Environmental Engineer Intern</h3>
-                            <div class="text-neon-blue font-semibold">Carbon GPT</div>
-                        </div>
-                        <span class="text-xs bg-white/10 text-white px-3 py-1 rounded-full border border-white/5 mt-2 md:mt-0">May 2024 – Aug 2024</span>
+                <div class="vintage-panel p-8 md:p-10 rounded-sm relative">
+                    <div class="flex flex-col md:flex-row justify-between items-baseline mb-4">
+                        <h3 class="font-serif text-3xl text-white">Environmental Engineer Intern</h3>
+                        <span class="font-serif italic text-lg text-white/60 mt-2 md:mt-0">Carbon GPT &nbsp;|&nbsp; May 2024 – Aug 2024</span>
                     </div>
-                    <ul class="space-y-3 text-gray-300 list-disc ml-5 leading-relaxed">
-                        <li>Built 4 Streamlit applications with Groq API to automate carbon emission calculations, eliminating hours of manual work</li>
-                        <li>Developed ETL pipeline with Python Requests/Pandas to scrape, process, and load 1.5M+ emission factors into PostgreSQL</li>
-                        <li>Led client engagements and represented the company to gather user feedback and guide user-centric product improvements</li>
+                    <ul class="space-y-3 font-serif text-xl text-white/80 leading-relaxed list-none ml-2">
+                        <li>• Built 4 Streamlit applications with Groq API to automate carbon emission calculations, eliminating hours of manual work</li>
+                        <li>• Developed ETL pipeline with Python Requests/Pandas to scrape, process, and load 1.5M+ emission factors into PostgreSQL</li>
+                        <li>• Led client engagements and represented the company to gather user feedback and guide user-centric product improvements</li>
                     </ul>
                 </div>
             </div>
         </section>
 
 
-        <!-- PROJECTS SECTION (Vertical Stack) -->
-        <section id="projects" class="fade-section">
-            <h2 class="text-4xl font-bold mb-12 flex items-center gap-4 text-white">
-                <span class="w-2 h-10 bg-gradient-to-b from-neon-purple to-pink-500 rounded-full block"></span>
-                Projects
-            </h2>
+        <!-- PROJECTS (Updated Links) -->
+        <section id="projects" class="py-24 reveal">
+            <h2 class="font-serif text-5xl text-white mb-16 border-b border-white/10 pb-4 inline-block italic">Projects</h2>
             
-            <div class="flex flex-col gap-6">
+            <div class="grid grid-cols-1 gap-10">
+                
                 <!-- Project 1 -->
-                <a href="https://github.com/godhahn" target="_blank" class="glow-card bg-glass p-8 rounded-2xl flex flex-col md:flex-row gap-6 items-start group">
-                    <div class="w-full">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-2xl font-bold text-white group-hover:text-neon-purple transition-colors">LLM-Powered Knowledge Graph Extractor</h3>
-                            <i class="fas fa-arrow-right text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all"></i>
-                        </div>
-                        <p class="text-gray-400 leading-relaxed">Built a 4-step LLM pipeline to extract and visualize an interactive knowledge graph from unstructured text</p>
+                <a href="https://github.com/godhahn/llm-kg-project" target="_blank" class="vintage-panel p-8 rounded-sm group block">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-serif text-3xl text-white group-hover:underline decoration-1 underline-offset-4">LLM-Powered Knowledge Graph Extractor</h3>
+                        <i class="fas fa-arrow-right text-white/40 group-hover:text-white transition-colors"></i>
                     </div>
+                    <p class="font-serif text-xl text-white/70 italic mb-4">GitHub</p>
+                    <ul class="font-serif text-xl text-white/80 leading-relaxed list-none">
+                        <li>• Built a 4-step LLM pipeline to extract and visualize an interactive knowledge graph from unstructured text</li>
+                    </ul>
                 </a>
 
                 <!-- Project 2 -->
-                <a href="https://github.com/godhahn" target="_blank" class="glow-card bg-glass p-8 rounded-2xl flex flex-col md:flex-row gap-6 items-start group">
-                    <div class="w-full">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-2xl font-bold text-white group-hover:text-neon-blue transition-colors">SGX Derivatives Data Downloader CLI</h3>
-                            <i class="fas fa-arrow-right text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all"></i>
-                        </div>
-                        <p class="text-gray-400 leading-relaxed">Built a Python CLI tool to automate SGX derivatives data retrieval with retry, logging, and scheduling support</p>
+                <a href="https://github.com/godhahn/sgx-project" target="_blank" class="vintage-panel p-8 rounded-sm group block">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-serif text-3xl text-white group-hover:underline decoration-1 underline-offset-4">SGX Derivatives Data Downloader CLI</h3>
+                        <i class="fas fa-arrow-right text-white/40 group-hover:text-white transition-colors"></i>
                     </div>
+                    <p class="font-serif text-xl text-white/70 italic mb-4">GitHub</p>
+                    <ul class="font-serif text-xl text-white/80 leading-relaxed list-none">
+                        <li>• Built a Python CLI tool to automate SGX derivatives data retrieval with retry, logging, and scheduling support</li>
+                    </ul>
                 </a>
 
                 <!-- Project 3 -->
-                <a href="https://github.com/godhahn" target="_blank" class="glow-card bg-glass p-8 rounded-2xl flex flex-col md:flex-row gap-6 items-start group">
-                    <div class="w-full">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-2xl font-bold text-white group-hover:text-green-400 transition-colors">Real-Time Stock Streaming Dashboard</h3>
-                            <i class="fas fa-arrow-right text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all"></i>
-                        </div>
-                        <p class="text-gray-400 leading-relaxed">Developed a real-time stock trading simulator with Kafka streaming and interactive Streamlit dashboard</p>
+                <a href="https://github.com/godhahn/kafka-project" target="_blank" class="vintage-panel p-8 rounded-sm group block">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-serif text-3xl text-white group-hover:underline decoration-1 underline-offset-4">Real-Time Stock Streaming Dashboard</h3>
+                        <i class="fas fa-arrow-right text-white/40 group-hover:text-white transition-colors"></i>
                     </div>
+                    <p class="font-serif text-xl text-white/70 italic mb-4">GitHub</p>
+                    <ul class="font-serif text-xl text-white/80 leading-relaxed list-none">
+                        <li>• Developed a real-time stock trading simulator with Kafka streaming and interactive Streamlit dashboard</li>
+                    </ul>
                 </a>
-
-                <!-- Project 4 -->
-                <a href="https://github.com/godhahn" target="_blank" class="glow-card bg-glass p-8 rounded-2xl flex flex-col md:flex-row gap-6 items-start group">
-                    <div class="w-full">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-2xl font-bold text-white group-hover:text-yellow-400 transition-colors">Weather Analytics ELT Pipeline</h3>
-                            <i class="fas fa-arrow-right text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all"></i>
-                        </div>
-                        <p class="text-gray-400 leading-relaxed">Built a cloud-native ELT pipeline to analyze Singapore weather trends using AWS Lambda/S3/Redshift</p>
+                
+                 <!-- Project 4 -->
+                 <a href="https://github.com/godhahn/data-project" target="_blank" class="vintage-panel p-8 rounded-sm group block">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-serif text-3xl text-white group-hover:underline decoration-1 underline-offset-4">Weather Analytics ELT Pipeline</h3>
+                        <i class="fas fa-arrow-right text-white/40 group-hover:text-white transition-colors"></i>
                     </div>
+                    <p class="font-serif text-xl text-white/70 italic mb-4">GitHub</p>
+                    <ul class="font-serif text-xl text-white/80 leading-relaxed list-none">
+                        <li>• Built a cloud-native ELT pipeline to analyze Singapore weather trends using AWS Lambda/S3/Redshift</li>
+                    </ul>
                 </a>
             </div>
         </section>
 
-
-        <!-- HOBBIES SECTION -->
-        <section id="hobbies" class="fade-section">
-            <h2 class="text-4xl font-bold mb-12 flex items-center gap-4 text-white">
-                <span class="w-2 h-10 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-full block"></span>
-                Hobbies & Leadership
-            </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Hobby 1 -->
-                <div class="glow-card bg-glass p-8 rounded-2xl">
-                    <div class="text-3xl text-yellow-400 mb-4"><i class="fas fa-basketball-ball"></i></div>
-                    <h3 class="text-xl font-bold text-white mb-2">Athlete</h3>
-                    <p class="text-gray-400">Won 6 medals (2 Gold, 3 Silver, 1 Bronze) representing NUS College in Chess/Basketball/Captain's Ball</p>
-                </div>
-
-                <!-- Hobby 2 -->
-                <div class="glow-card bg-glass p-8 rounded-2xl">
-                    <div class="text-3xl text-green-400 mb-4"><i class="fas fa-seedling"></i></div>
-                    <h3 class="text-xl font-bold text-white mb-2">Member</h3>
-                    <p class="text-gray-400">Developed a 2-year roadmap and launched a BYOC campaign to reduce single-use waste in a Cambodian village</p>
-                </div>
-
-                <!-- Hobby 3 -->
-                <div class="glow-card bg-glass p-8 rounded-2xl md:col-span-2">
-                    <div class="text-3xl text-blue-400 mb-4"><i class="fas fa-users"></i></div>
-                    <h3 class="text-xl font-bold text-white mb-2">Planning Committee</h3>
-                    <p class="text-gray-400">Co-organized a 2-week symposium hosting 150 students from 10 ASEAN countries</p>
-                </div>
-            </div>
-        </section>
-
-        <footer class="text-center text-gray-600 text-sm py-10">
-            <p>&copy; 2026 Pang Yi Hahn</p>
+        <footer class="text-center py-20 border-t border-white/10 mt-10">
+            <p class="font-serif text-white/40 italic text-lg">Designed by Pang Yi Hahn &copy; 2026</p>
         </footer>
     </main>
 
     <!-- SCRIPTS -->
     <script>
-        // --- TYPEWRITER EFFECT ---
-        const text = "Passionate about data engineering, analytics, and machine learning.";
+        // --- TYPEWRITER ---
+        const text = "Data Engineering. Analytics. Machine Learning.";
         const typeWriterElement = document.getElementById('typewriter');
         let i = 0;
-
+        
         function typeWriter() {
             if (i < text.length) {
                 typeWriterElement.innerHTML += text.charAt(i);
                 i++;
-                setTimeout(typeWriter, 50); // Adjust typing speed here
-            } else {
-                // Remove cursor after typing
-                typeWriterElement.classList.remove('typing-cursor');
+                setTimeout(typeWriter, 50); 
             }
         }
-        
-        // Start typing after a short delay
         setTimeout(typeWriter, 1000);
 
-
-        // --- SMOOTH SCROLL & ACTIVE NAV ---
+        // --- SMOOTH SCROLL ---
         function scrollToSection(id) {
-            const element = document.getElementById(id);
-            if (element) {
-                // Offset for fixed header
-                const offset = 100;
+            const el = document.getElementById(id);
+            if (el) {
+                const navHeight = document.getElementById('navbar').offsetHeight;
+                const offset = navHeight + 20; 
                 const bodyRect = document.body.getBoundingClientRect().top;
-                const elementRect = element.getBoundingClientRect().top;
-                const elementPosition = elementRect - bodyRect;
-                const offsetPosition = elementPosition - offset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
+                const elRect = el.getBoundingClientRect().top;
+                const offsetPosition = elRect - bodyRect - offset;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
             }
         }
 
-        // Highlight Nav on Scroll
+        // --- SCROLL REVEAL & NAV HIGHLIGHT ---
         window.addEventListener('scroll', () => {
-            const sections = ['home', 'experience', 'projects', 'hobbies'];
+            const sections = ['home', 'hobbies', 'experience', 'projects'];
             let current = '';
 
-            sections.forEach(section => {
-                const element = document.getElementById(section);
-                const rect = element.getBoundingClientRect();
-                if (rect.top <= 200 && rect.bottom >= 200) {
-                    current = section;
+            // Nav Highlighting
+            sections.forEach(sec => {
+                const el = document.getElementById(sec);
+                if (el.getBoundingClientRect().top <= window.innerHeight / 2) {
+                    current = sec;
                 }
             });
 
             if (current) {
-                document.querySelectorAll('.nav-pill').forEach(btn => {
+                document.querySelectorAll('.nav-link').forEach(btn => {
                     btn.classList.remove('active');
                     if (btn.id === `btn-${current}`) {
                         btn.classList.add('active');
                     }
                 });
             }
-            
-            // Fade in sections on scroll
-            document.querySelectorAll('.fade-section').forEach(sec => {
-                const rect = sec.getBoundingClientRect();
-                if (rect.top <= window.innerHeight * 0.75) {
-                    sec.classList.add('visible');
+
+            // Reveal Animation
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(reveal => {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveal.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
                 }
             });
         });
-
-
-        // --- PARTICLE BACKGROUND CANVAS ---
-        const canvas = document.getElementById('canvas-bg');
-        const ctx = canvas.getContext('2d');
-        let particlesArray;
-
-        // Resize Canvas
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2;
-                this.speedX = (Math.random() * 0.5) - 0.25;
-                this.speedY = (Math.random() * 0.5) - 0.25;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(100, 116, 139, 0.5)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function initParticles() {
-            particlesArray = [];
-            const numberOfParticles = (canvas.width * canvas.height) / 15000;
-            for (let i = 0; i < numberOfParticles; i++) {
-                particlesArray.push(new Particle());
-            }
-        }
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-                particlesArray[i].draw();
-
-                // Draw connections
-                for (let j = i; j < particlesArray.length; j++) {
-                    const dx = particlesArray[i].x - particlesArray[j].x;
-                    const dy = particlesArray[i].y - particlesArray[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < 100) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = `rgba(100, 116, 139, ${1 - distance/100})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
-                        ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-            requestAnimationFrame(animateParticles);
-        }
-
-        initParticles();
-        animateParticles();
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            initParticles();
-        });
-
+        
+        // Trigger once on load
+        window.dispatchEvent(new Event('scroll'));
     </script>
 </body>
 </html>
