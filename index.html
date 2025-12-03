@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pang Yi Hahn | Adventure Portfolio</title>
+    <title>Pang Yi Hahn | Portfolio</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -83,8 +83,7 @@
             background-image: url('background.jpg');
             background-size: cover;
             background-position: center;
-            transform: scale(1.05); /* Slight zoom for parallax */
-            transition: transform 0.1s ease-out;
+            /* Removed transform transition for fixed effect */
         }
         
         .bg-overlay {
@@ -181,9 +180,13 @@
             color: #0f172a;
         }
 
-        .highlight-text {
-            color: #38bdf8; /* Sky blue highlight */
+        /* Typing Cursor */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+            margin-left: 2px;
         }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
 <body class="antialiased selection:bg-white selection:text-black">
@@ -195,8 +198,7 @@
     <div class="bg-overlay"></div>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 p-8 flex justify-end items-center text-white mix-blend-difference">
-        <!-- Removed PYH Button -->
+    <nav class="fixed top-0 w-full z-50 p-6 md:p-8 flex justify-end items-center text-white bg-black/40 backdrop-blur-md border-b border-white/5 transition-all duration-300">
         <div class="hidden md:flex gap-10 text-xs font-bold tracking-widest uppercase">
             <button onclick="scrollToSection('about')" class="nav-link">About</button>
             <button onclick="scrollToSection('experience')" class="nav-link">Experience</button>
@@ -217,13 +219,10 @@
                     <div class="h-1 w-24 bg-white mb-6"></div>
                 </div>
 
-                <div>
-                    <h2 class="text-xl md:text-2xl font-light tracking-wide opacity-90 mb-2">
-                        Data Engineering, Analytics, Machine Learning
+                <div class="h-12 flex items-center">
+                    <h2 class="text-xl md:text-2xl font-light tracking-wide opacity-90 typing-cursor">
+                        I am a <span id="typing-text" class="font-bold"></span>
                     </h2>
-                    <p class="text-sm md:text-base font-medium tracking-widest uppercase opacity-70">
-                        Certified Climber &bull; Diver &bull; Baller &bull; Food Enjoyer
-                    </p>
                 </div>
 
                 <!-- Social Links -->
@@ -240,11 +239,11 @@
                 </div>
             </div>
 
-            <!-- RIGHT: Profile Photo (Float & Fade) -->
+            <!-- RIGHT: Profile Photo (Bigger) -->
             <div class="flex justify-center md:justify-end z-10 order-first md:order-last mb-8 md:mb-0 opacity-0 animate-slide-in-right" style="animation-delay: 0.5s; animation-fill-mode: forwards;">
-                <div class="w-64 h-64 md:w-80 md:h-80 relative animate-float">
+                <div class="w-80 h-80 md:w-[28rem] md:h-[28rem] relative animate-float">
                     <!-- Frame -->
-                    <div class="absolute inset-0 border-2 border-white/30 transform translate-x-4 translate-y-4"></div>
+                    <div class="absolute inset-0 border-2 border-white/30 transform translate-x-6 translate-y-6"></div>
                     <!-- Image -->
                     <img src="profile.jpg" alt="Profile" class="w-full h-full object-cover shadow-2xl relative z-10 filter grayscale hover:grayscale-0 transition-all duration-700">
                 </div>
@@ -269,10 +268,10 @@
                 <div class="space-y-6">
                     <h4 class="text-2xl font-bold text-white border-l-4 border-white pl-4">The Engineer</h4>
                     <p class="text-lg font-light leading-relaxed text-gray-200">
-                        "Hey there, I am <span class="font-bold text-white">Pang</span>. I am a final year student in the National University of Singapore. I study <span class="highlight-text">environmental engineering</span> and <span class="highlight-text">data analytics</span>."
+                        Hey there, I am <span class="font-bold text-white">Pang</span>. I am a final year student in the National University of Singapore. I study environmental engineering and data analytics.
                     </p>
                     <p class="text-lg font-light leading-relaxed text-gray-200">
-                        "I plan to develop my career in data engineering, analytics, and machine learning, leveraging technology to build scalable data solutions."
+                        I plan to develop my career in data engineering, analytics, and machine learning, leveraging technology to build scalable data solutions.
                     </p>
                 </div>
 
@@ -280,10 +279,10 @@
                 <div class="space-y-6">
                     <h4 class="text-2xl font-bold text-white border-l-4 border-white pl-4">The Explorer</h4>
                     <p class="text-lg font-light leading-relaxed text-gray-200">
-                        "I like sports and food. I am a certified <span class="text-white font-normal border-b border-white/30">climber</span> and <span class="text-white font-normal border-b border-white/30">diver</span>, so any high mountain or deep sea excursions, please 'jio' me!"
+                        I like sports and food. I am a certified climber and diver, so any high mountain or deep sea excursions, please 'jio' me!
                     </p>
                     <p class="text-lg font-light leading-relaxed text-gray-200">
-                        "I also casually play basketball and other ball games. When I'm not balling, I like eating sushi and roti pratha."
+                        I also casually play basketball and other ball games. When I'm not balling, I like eating sushi and roti pratha.
                     </p>
                 </div>
             </div>
@@ -378,9 +377,11 @@
                         <div>
                             <div class="flex justify-between items-start mb-4">
                                 <h4 class="text-2xl font-bold">LLM-Powered Knowledge Graph Extractor</h4>
-                                <i class="fab fa-github text-xl opacity-50"></i>
                             </div>
                             <p class="text-gray-400 font-light mb-6">Built a 4-step LLM pipeline to extract and visualize an interactive knowledge graph from unstructured text.</p>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">
+                            <span>View Code</span>
                         </div>
                     </div>
                 </a>
@@ -391,9 +392,11 @@
                         <div>
                             <div class="flex justify-between items-start mb-4">
                                 <h4 class="text-2xl font-bold">SGX Derivatives Data Downloader CLI</h4>
-                                <i class="fab fa-github text-xl opacity-50"></i>
                             </div>
                             <p class="text-gray-400 font-light mb-6">Built a Python CLI tool to automate SGX derivatives data retrieval with retry, logging, and scheduling support.</p>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">
+                            <span>View Code</span>
                         </div>
                     </div>
                 </a>
@@ -404,9 +407,11 @@
                         <div>
                             <div class="flex justify-between items-start mb-4">
                                 <h4 class="text-2xl font-bold">Real-Time Stock Streaming Dashboard</h4>
-                                <i class="fab fa-github text-xl opacity-50"></i>
                             </div>
                             <p class="text-gray-400 font-light mb-6">Developed a real-time stock trading simulator with Kafka streaming and interactive Streamlit dashboard.</p>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">
+                            <span>View Code</span>
                         </div>
                     </div>
                 </a>
@@ -417,9 +422,11 @@
                         <div>
                             <div class="flex justify-between items-start mb-4">
                                 <h4 class="text-2xl font-bold">Weather Analytics ELT Pipeline</h4>
-                                <i class="fab fa-github text-xl opacity-50"></i>
                             </div>
                             <p class="text-gray-400 font-light mb-6">Built a cloud-native ELT pipeline to analyze Singapore weather trends using AWS Lambda/S3/Redshift.</p>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">
+                            <span>View Code</span>
                         </div>
                     </div>
                 </a>
@@ -445,6 +452,54 @@
                 });
             }
         }
+
+        // --- TYPEWRITER EFFECT ---
+        const words = [
+            "Data Engineer", 
+            "Data Analyst", 
+            "Machine Learning Engineer", 
+            "Climber", 
+            "Diver", 
+            "Basketball Player", 
+            "Sushi Lover", 
+            "Roti Pratha Eater"
+        ];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingSpeed = 100;
+        const deletingSpeed = 50;
+        const pauseTime = 1500;
+        const typingTextElement = document.getElementById('typing-text');
+
+        function type() {
+            const currentWord = words[wordIndex];
+            
+            if (isDeleting) {
+                typingTextElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingTextElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? deletingSpeed : typingSpeed;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                isDeleting = true;
+                typeSpeed = pauseTime;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(type, typeSpeed);
+        }
+
+        // Start typing loop
+        setTimeout(type, 1000);
+
 
         // --- INTERSECTION OBSERVER FOR REVEAL ON SCROLL ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -476,13 +531,6 @@
             
             const expSection = document.getElementById('experience');
             if(expSection) timelineObserver.observe(expSection);
-        });
-
-        // --- PARALLAX EFFECT FOR BACKGROUND ---
-        window.addEventListener('scroll', () => {
-            const bg = document.getElementById('parallax-bg');
-            const scrollPosition = window.pageYOffset;
-            bg.style.transform = `scale(1.05) translateY(${scrollPosition * 0.3}px)`;
         });
 
         // --- TILT EFFECT FOR CARDS ---
