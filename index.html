@@ -32,6 +32,7 @@
                         'float': 'float 6s ease-in-out infinite',
                         'slide-in-left': 'slideInLeft 1s ease-out forwards',
                         'slide-in-right': 'slideInRight 1s ease-out forwards',
+                        'fade-in-up': 'fadeInUp 1s ease-out forwards',
                     },
                     keyframes: {
                         float: {
@@ -45,6 +46,10 @@
                         slideInRight: {
                             '0%': { opacity: '0', transform: 'translateX(50px)' },
                             '100%': { opacity: '1', transform: 'translateX(0)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
                         }
                     }
                 }
@@ -67,18 +72,17 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -3; /* Moved further back */
+            z-index: -3;
             overflow: hidden;
         }
         
-        /* Snow Canvas */
         #snow-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -2; /* On top of image, behind content */
+            z-index: -2;
             pointer-events: none;
         }
         
@@ -102,7 +106,7 @@
             pointer-events: none;
         }
 
-        /* --- Navigation --- */
+        /* --- Animations & Interactions --- */
         .nav-link {
             position: relative;
             padding-bottom: 2px;
@@ -121,7 +125,6 @@
             width: 100%;
         }
 
-        /* --- Scroll Reveal & Stagger --- */
         .reveal-on-scroll {
             opacity: 0;
             transform: translateY(30px);
@@ -132,12 +135,6 @@
             transform: translateY(0);
         }
 
-        /* Stagger Delays */
-        .delay-100 { transition-delay: 0.1s; }
-        .delay-200 { transition-delay: 0.2s; }
-        .delay-300 { transition-delay: 0.3s; }
-
-        /* --- Tilt Effect --- */
         .tilt-card {
             transition: transform 0.1s ease, box-shadow 0.3s ease;
             transform-style: preserve-3d;
@@ -147,7 +144,6 @@
             z-index: 10;
         }
 
-        /* --- Social Icons --- */
         .social-btn {
             position: relative;
             overflow: hidden;
@@ -171,7 +167,6 @@
             color: #0f172a;
         }
 
-        /* --- Typing Cursor --- */
         .typing-cursor::after {
             content: '|';
             animation: blink 1s step-end infinite;
@@ -182,11 +177,10 @@
 </head>
 <body class="antialiased selection:bg-white selection:text-black">
 
-    <!-- Backgrounds -->
+    <!-- Background -->
     <div class="bg-fixed-wrapper">
         <div id="parallax-bg" class="bg-image"></div>
     </div>
-    <!-- Snowfall Layer -->
     <canvas id="snow-canvas"></canvas>
     <div class="bg-overlay"></div>
 
@@ -219,16 +213,8 @@
                 </div>
 
                 <!-- Social Links -->
-                <div class="flex gap-4 pt-4">
-                    <a href="https://linkedin.com/in/yi-hahn-pang-" target="_blank" class="social-btn border border-white/30 rounded-full w-12 h-12 flex items-center justify-center text-lg" title="LinkedIn">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="https://github.com/pangyihahn" target="_blank" class="social-btn border border-white/30 rounded-full w-12 h-12 flex items-center justify-center text-lg" title="GitHub">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="mailto:yihahn.pang@gmail.com" class="social-btn border border-white/30 rounded-full w-12 h-12 flex items-center justify-center text-lg" title="Email">
-                        <i class="fas fa-envelope"></i>
-                    </a>
+                <div class="flex gap-4 pt-4" id="hero-socials">
+                    <!-- Injected via JS -->
                 </div>
             </div>
 
@@ -240,12 +226,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-10 left-0 w-full flex flex-col items-center justify-center text-white/60 cursor-pointer hover:text-white transition-colors animate-bounce" onclick="scrollToSection('about')">
-            <span class="text-[10px] tracking-widest uppercase mb-2">Start Descent</span>
-            <i class="fas fa-chevron-down text-xl"></i>
-        </div>
     </section>
 
 
@@ -254,28 +234,8 @@
         <div class="max-w-6xl mx-auto reveal-on-scroll">
             <h3 class="text-sm font-bold tracking-widest uppercase mb-12 text-white/50 text-center">About Me</h3>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
-                <!-- Column 1: Professional -->
-                <div class="space-y-6">
-                    <h4 class="text-2xl font-bold text-white border-l-4 border-white pl-4">The Engineer</h4>
-                    <p class="text-lg font-light leading-relaxed text-gray-200">
-                        Hey there, I am <span class="font-bold text-white">Pang</span>. I am a final year student in the National University of Singapore. I study environmental engineering and data analytics.
-                    </p>
-                    <p class="text-lg font-light leading-relaxed text-gray-200">
-                        I plan to develop my career in data engineering, analytics, and machine learning, leveraging technology to build scalable data solutions.
-                    </p>
-                </div>
-
-                <!-- Column 2: Personal -->
-                <div class="space-y-6">
-                    <h4 class="text-2xl font-bold text-white border-l-4 border-white pl-4">The Explorer</h4>
-                    <p class="text-lg font-light leading-relaxed text-gray-200">
-                        I like sports and food. I am a certified climber and diver, so any high mountain or deep sea excursions, please 'jio' me!
-                    </p>
-                    <p class="text-lg font-light leading-relaxed text-gray-200">
-                        I also casually play basketball and other ball games. When I'm not balling, I like eating sushi and roti pratha.
-                    </p>
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16" id="about-content">
+                <!-- Content Injected via JS -->
             </div>
         </div>
     </section>
@@ -286,59 +246,8 @@
         <div class="max-w-5xl mx-auto relative">
             <h3 class="text-sm font-bold tracking-widest uppercase mb-20 border-b border-white/30 pb-4 inline-block text-white">Experience</h3>
 
-            <div class="space-y-20 relative">
-                
-                <!-- Job 1 -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 group reveal-on-scroll">
-                    <div class="md:col-span-1 relative">
-                        <span class="text-5xl font-black opacity-10 group-hover:opacity-40 transition-opacity">01</span>
-                        <div class="text-sm font-bold mt-2">JAN 2026</div>
-                        <div class="text-xs opacity-60 uppercase tracking-widest">Incoming</div>
-                    </div>
-                    <div class="md:col-span-3 hover:bg-white/5 p-6 rounded-lg transition-colors border border-transparent hover:border-white/10">
-                        <h4 class="text-3xl font-bold mb-1">Data Engineer Intern</h4>
-                        <div class="text-lg font-light mb-6 opacity-80 text-gray-300">Climate Impact X</div>
-                        <p class="text-gray-300 font-light leading-relaxed">
-                            Invited to return to the company following the previous internship, recognized for strong contributions, technical expertise, proactiveness, quick learning, and effective collaboration with stakeholders.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Job 2 -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 group reveal-on-scroll delay-100">
-                    <div class="md:col-span-1 relative">
-                        <span class="text-5xl font-black opacity-10 group-hover:opacity-40 transition-opacity">02</span>
-                        <div class="text-sm font-bold mt-2">JAN - JUN 2025</div>
-                    </div>
-                    <div class="md:col-span-3 hover:bg-white/5 p-6 rounded-lg transition-colors border border-transparent hover:border-white/10">
-                        <h4 class="text-3xl font-bold mb-1">Data Engineer Intern</h4>
-                        <div class="text-lg font-light mb-6 opacity-80 text-gray-300">Climate Impact X</div>
-                        <ul class="space-y-4 text-gray-300 font-light leading-relaxed list-none">
-                            <li>&bull; Built 18 automated ETL pipelines using Airflow/PySpark/Azure to ingest carbon credit data into ADLS/Snowflake/MongoDB, eliminating 10+ manual hours weekly</li>
-                            <li>&bull; Redesigned Snowflake data architecture by consolidating 40+ views/tables into optimized staging views and business-ready models, reducing storage costs by 65% and improving query performance</li>
-                            <li>&bull; Implemented an improved scraping method for carbon registry datasets, resolving 80-90 missing data entries</li>
-                            <li>&bull; Developed dbt tests and Snowflake monitoring dashboards, which flagged a major SQL logic error and improved data quality</li>
-                            <li>&bull; Engineered 2 CI/CD pipelines with Git/Bash/Azure DevOps to automate cloud infrastructure deployment</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Job 3 -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 group reveal-on-scroll delay-200">
-                    <div class="md:col-span-1 relative">
-                        <span class="text-5xl font-black opacity-10 group-hover:opacity-40 transition-opacity">03</span>
-                        <div class="text-sm font-bold mt-2">MAY - AUG 2024</div>
-                    </div>
-                    <div class="md:col-span-3 hover:bg-white/5 p-6 rounded-lg transition-colors border border-transparent hover:border-white/10">
-                        <h4 class="text-3xl font-bold mb-1">Environmental Engineer Intern</h4>
-                        <div class="text-lg font-light mb-6 opacity-80 text-gray-300">Carbon GPT</div>
-                        <ul class="space-y-4 text-gray-300 font-light leading-relaxed list-none">
-                            <li>&bull; Built 4 Streamlit applications with Groq API to automate carbon emission calculations, eliminating hours of manual work</li>
-                            <li>&bull; Developed ETL pipeline with Python Requests/Pandas to scrape, process, and load 1.5M+ emission factors into PostgreSQL</li>
-                            <li>&bull; Led client engagements and represented the company to gather user feedback and guide user-centric product improvements</li>
-                        </ul>
-                    </div>
-                </div>
+            <div class="space-y-20 relative" id="experience-list">
+                <!-- Experience Items Injected via JS -->
             </div>
         </div>
     </section>
@@ -349,68 +258,8 @@
         <div class="max-w-6xl mx-auto">
             <h3 class="text-sm font-bold tracking-widest uppercase mb-16 border-b border-white/30 pb-4 inline-block text-white">Projects</h3>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                <!-- Project 1 -->
-                <a href="https://github.com/pangyihahn/llm-kg-project" target="_blank" class="tilt-card block h-full bg-white/5 p-8 border border-white/10 hover:border-white/50 rounded-sm reveal-on-scroll">
-                    <div class="flex flex-col justify-between h-full">
-                        <div>
-                            <div class="flex justify-between items-start mb-4">
-                                <h4 class="text-2xl font-bold">LLM-Powered Knowledge Graph Extractor</h4>
-                            </div>
-                            <p class="text-gray-400 font-light mb-6">Built a 4-step LLM pipeline to extract and visualize an interactive knowledge graph from unstructured text.</p>
-                        </div>
-                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">
-                            <span>View Code</span>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Project 2 -->
-                <a href="https://github.com/pangyihahn/sgx-project" target="_blank" class="tilt-card block h-full bg-white/5 p-8 border border-white/10 hover:border-white/50 rounded-sm reveal-on-scroll delay-100">
-                    <div class="flex flex-col justify-between h-full">
-                        <div>
-                            <div class="flex justify-between items-start mb-4">
-                                <h4 class="text-2xl font-bold">SGX Derivatives Data Downloader CLI</h4>
-                            </div>
-                            <p class="text-gray-400 font-light mb-6">Built a Python CLI tool to automate SGX derivatives data retrieval with retry, logging, and scheduling support.</p>
-                        </div>
-                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">
-                            <span>View Code</span>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Project 3 -->
-                <a href="https://github.com/pangyihahn/kafka-project" target="_blank" class="tilt-card block h-full bg-white/5 p-8 border border-white/10 hover:border-white/50 rounded-sm reveal-on-scroll delay-200">
-                    <div class="flex flex-col justify-between h-full">
-                        <div>
-                            <div class="flex justify-between items-start mb-4">
-                                <h4 class="text-2xl font-bold">Real-Time Stock Streaming Dashboard</h4>
-                            </div>
-                            <p class="text-gray-400 font-light mb-6">Developed a real-time stock trading simulator with Kafka streaming and interactive Streamlit dashboard.</p>
-                        </div>
-                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">
-                            <span>View Code</span>
-                        </div>
-                    </div>
-                </a>
-
-                 <!-- Project 4 -->
-                 <a href="https://github.com/pangyihahn/data-project" target="_blank" class="tilt-card block h-full bg-white/5 p-8 border border-white/10 hover:border-white/50 rounded-sm reveal-on-scroll delay-300">
-                    <div class="flex flex-col justify-between h-full">
-                        <div>
-                            <div class="flex justify-between items-start mb-4">
-                                <h4 class="text-2xl font-bold">Weather Analytics ELT Pipeline</h4>
-                            </div>
-                            <p class="text-gray-400 font-light mb-6">Built a cloud-native ELT pipeline to analyze Singapore weather trends using AWS Lambda/S3/Redshift.</p>
-                        </div>
-                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">
-                            <span>View Code</span>
-                        </div>
-                    </div>
-                </a>
-
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="projects-list">
+                <!-- Projects Injected via JS -->
             </div>
         </div>
     </section>
@@ -420,38 +269,186 @@
         <p class="text-xs font-bold tracking-widest uppercase">&copy; 2026 Pang Yi Hahn</p>
     </footer>
 
-    <!-- INTERACTION SCRIPTS -->
+    <!-- LOGIC & DATA -->
     <script>
-        // --- SCROLL TO SECTION ---
-        function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if (el) {
-                window.scrollTo({
-                    top: el.offsetTop,
-                    behavior: 'smooth'
-                });
-            }
+        // ==========================================
+        //  1. PORTFOLIO CONTENT (EDIT THIS SECTION)
+        // ==========================================
+        
+        const portfolioData = {
+            socials: {
+                linkedin: "https://linkedin.com/in/yihahnpang",
+                github: "https://github.com/pangyihahn",
+                email: "mailto:yihahn.pang@gmail.com"
+            },
+            heroTypewriter: [
+                "Data Enthusiast", 
+                "Climber", 
+                "Diver", 
+                "Baller", 
+                "Foodie"
+            ],
+            about: {
+                engineer: `Hey there, I am <span class="font-bold text-white">Pang</span>. I am a final year student in the National University of Singapore, studying environmental engineering and data analytics. <br><br> I plan to develop my career in data engineering, analytics, and machine learning, leveraging technology to build scalable data solutions.`,
+                explorer: `I like sports and food. I am a certified climber and diver, so any high mountain or deep sea excursions, please 'jio' me! <br><br> I also casually play basketball and other ball games. When I'm not balling, I like eating sushi and roti pratha.`
+            },
+            experience: [
+                {
+                    number: "01",
+                    date: "JAN 2026",
+                    status: "Incoming",
+                    role: "Data Engineer Intern",
+                    company: "Climate Impact X",
+                    desc: "Invited to return to the company following the previous internship, recognized for strong contributions, technical expertise, proactiveness, quick learning, and effective collaboration with stakeholders."
+                },
+                {
+                    number: "02",
+                    date: "JAN - JUN 2025",
+                    status: "",
+                    role: "Data Engineer Intern",
+                    company: "Climate Impact X",
+                    desc: [
+                        "Built 18 automated ETL pipelines using Airflow/PySpark/Azure to ingest carbon credit data into ADLS/Snowflake/MongoDB, eliminating 10+ manual hours weekly",
+                        "Redesigned Snowflake data architecture by consolidating 40+ views/tables into optimized staging views and business-ready models, reducing storage costs by 65% and improving query performance",
+                        "Implemented an improved scraping method for carbon registry datasets, resolving 80-90 missing data entries",
+                        "Developed dbt tests and Snowflake monitoring dashboards, which flagged a major SQL logic error and improved data quality",
+                        "Engineered 2 CI/CD pipelines with Git/Bash/Azure DevOps to automate cloud infrastructure deployment"
+                    ]
+                },
+                {
+                    number: "03",
+                    date: "MAY - AUG 2024",
+                    status: "",
+                    role: "Environmental Engineer Intern",
+                    company: "Carbon GPT",
+                    desc: [
+                        "Built 4 Streamlit applications with Groq API to automate carbon emission calculations, eliminating hours of manual work",
+                        "Developed ETL pipeline with Python Requests/Pandas to scrape, process, and load 1.5M+ emission factors into PostgreSQL",
+                        "Led client engagements and represented the company to gather user feedback and guide user-centric product improvements"
+                    ]
+                }
+            ],
+            projects: [
+                {
+                    title: "LLM-Powered Knowledge Graph Extractor",
+                    desc: "Built a 4-step LLM pipeline to extract and visualize an interactive knowledge graph from unstructured text.",
+                    link: "https://github.com/pangyihahn/llm-kg-project"
+                },
+                {
+                    title: "SGX Derivatives Data Downloader CLI",
+                    desc: "Built a Python CLI tool to automate SGX derivatives data retrieval with retry, logging, and scheduling support.",
+                    link: "https://github.com/pangyihahn/sgx-project"
+                },
+                {
+                    title: "Real-Time Stock Streaming Dashboard",
+                    desc: "Developed a real-time stock trading simulator with Kafka streaming and interactive Streamlit dashboard.",
+                    link: "https://github.com/pangyihahn/kafka-project"
+                },
+                {
+                    title: "Weather Analytics ELT Pipeline",
+                    desc: "Built a cloud-native ELT pipeline to analyze Singapore weather trends using AWS Lambda/S3/Redshift.",
+                    link: "https://github.com/pangyihahn/data-project"
+                }
+            ]
+        };
+
+
+        // ==========================================
+        //  2. RENDERING LOGIC (DO NOT EDIT)
+        // ==========================================
+
+        function renderPortfolio() {
+            // Render Socials
+            const socialHTML = `
+                <a href="${portfolioData.socials.linkedin}" target="_blank" class="social-btn border border-white/30 rounded-full w-12 h-12 flex items-center justify-center text-lg" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="${portfolioData.socials.github}" target="_blank" class="social-btn border border-white/30 rounded-full w-12 h-12 flex items-center justify-center text-lg" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="${portfolioData.socials.email}" class="social-btn border border-white/30 rounded-full w-12 h-12 flex items-center justify-center text-lg" title="Email"><i class="fas fa-envelope"></i></a>
+            `;
+            document.getElementById('hero-socials').innerHTML = socialHTML;
+
+            // Render About
+            const aboutHTML = `
+                <div class="space-y-6">
+                    <h4 class="text-2xl font-bold text-white border-l-4 border-white pl-4">The Engineer</h4>
+                    <p class="text-lg font-light leading-relaxed text-gray-200">${portfolioData.about.engineer}</p>
+                </div>
+                <div class="space-y-6">
+                    <h4 class="text-2xl font-bold text-white border-l-4 border-white pl-4">The Explorer</h4>
+                    <p class="text-lg font-light leading-relaxed text-gray-200">${portfolioData.about.explorer}</p>
+                </div>
+            `;
+            document.getElementById('about-content').innerHTML = aboutHTML;
+
+            // Render Experience
+            const expContainer = document.getElementById('experience-list');
+            portfolioData.experience.forEach((job, index) => {
+                let descHTML = '';
+                if (Array.isArray(job.desc)) {
+                    descHTML = `<ul class="space-y-4 text-gray-300 font-light leading-relaxed list-none">
+                        ${job.desc.map(item => `<li>&bull; ${item}</li>`).join('')}
+                    </ul>`;
+                } else {
+                    descHTML = `<p class="text-gray-300 font-light leading-relaxed">${job.desc}</p>`;
+                }
+
+                const delay = index * 100;
+                const html = `
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 group reveal-on-scroll" style="transition-delay: ${delay}ms">
+                    <div class="md:col-span-1 relative">
+                        <span class="text-5xl font-black opacity-10 group-hover:opacity-40 transition-opacity">${job.number}</span>
+                        <div class="text-sm font-bold mt-2">${job.date}</div>
+                        ${job.status ? `<div class="text-xs opacity-60 uppercase tracking-widest">${job.status}</div>` : ''}
+                    </div>
+                    <div class="md:col-span-3 hover:bg-white/5 p-6 rounded-lg transition-colors border border-transparent hover:border-white/10">
+                        <h4 class="text-3xl font-bold mb-1">${job.role}</h4>
+                        <div class="text-lg font-light mb-6 opacity-80 text-gray-300">${job.company}</div>
+                        ${descHTML}
+                    </div>
+                </div>`;
+                expContainer.innerHTML += html;
+            });
+
+            // Render Projects
+            const projContainer = document.getElementById('projects-list');
+            portfolioData.projects.forEach((proj, index) => {
+                const delay = index * 100;
+                const html = `
+                <a href="${proj.link}" target="_blank" class="tilt-card block h-full bg-white/5 p-8 border border-white/10 hover:border-white/50 rounded-sm reveal-on-scroll" style="transition-delay: ${delay}ms">
+                    <div class="flex flex-col justify-between h-full">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <h4 class="text-2xl font-bold">${proj.title}</h4>
+                            </div>
+                            <p class="text-gray-400 font-light mb-6">${proj.desc}</p>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">
+                            <span>View Code</span>
+                        </div>
+                    </div>
+                </a>`;
+                projContainer.innerHTML += html;
+            });
         }
 
-        // --- TYPEWRITER EFFECT ---
-        const words = [
-            "Data Enthusiast", 
-            "Climber", 
-            "Diver", 
-            "Baller", 
-            "Foodie"
-        ];
-        let wordIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-        const typingSpeed = 100;
-        const deletingSpeed = 50;
-        const pauseTime = 1500;
-        const typingTextElement = document.getElementById('typing-text');
+        // Run Render
+        renderPortfolio();
 
+
+        // ==========================================
+        //  3. ANIMATION LOGIC
+        // ==========================================
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+        }
+
+        // Typewriter
+        let wordIndex = 0, charIndex = 0, isDeleting = false;
+        const typingTextElement = document.getElementById('typing-text');
+        
         function type() {
-            const currentWord = words[wordIndex];
-            
+            const currentWord = portfolioData.heroTypewriter[wordIndex];
             if (isDeleting) {
                 typingTextElement.textContent = currentWord.substring(0, charIndex - 1);
                 charIndex--;
@@ -459,30 +456,23 @@
                 typingTextElement.textContent = currentWord.substring(0, charIndex + 1);
                 charIndex++;
             }
-
-            let typeSpeed = isDeleting ? deletingSpeed : typingSpeed;
-
+            
+            let typeSpeed = isDeleting ? 50 : 100;
             if (!isDeleting && charIndex === currentWord.length) {
-                isDeleting = true;
-                typeSpeed = pauseTime;
+                isDeleting = true; typeSpeed = 1500;
             } else if (isDeleting && charIndex === 0) {
                 isDeleting = false;
-                wordIndex = (wordIndex + 1) % words.length;
+                wordIndex = (wordIndex + 1) % portfolioData.heroTypewriter.length;
                 typeSpeed = 500;
             }
-
             setTimeout(type, typeSpeed);
         }
-
-        // Start typing loop
         setTimeout(type, 1000);
 
-
-        // --- SNOWFALL ANIMATION ---
+        // Snow & Observers
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
-        let width, height;
-        let snowflakes = [];
+        let width, height, snowflakes = [];
 
         function resize() {
             width = window.innerWidth;
@@ -490,7 +480,6 @@
             canvas.width = width;
             canvas.height = height;
         }
-
         function createSnowflake() {
             return {
                 x: Math.random() * width,
@@ -500,14 +489,10 @@
                 wind: Math.random() * 0.5 - 0.25
             };
         }
-
         function initSnow() {
             snowflakes = [];
-            for (let i = 0; i < 100; i++) {
-                snowflakes.push(createSnowflake());
-            }
+            for (let i = 0; i < 100; i++) snowflakes.push(createSnowflake());
         }
-
         function drawSnow() {
             ctx.clearRect(0, 0, width, height);
             ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
@@ -520,61 +505,42 @@
             moveSnow();
             requestAnimationFrame(drawSnow);
         }
-
         function moveSnow() {
             for (let flake of snowflakes) {
                 flake.y += flake.speed;
                 flake.x += flake.wind;
-
                 if (flake.y > height) {
                     flake.y = 0;
                     flake.x = Math.random() * width;
                 }
             }
         }
-
         window.addEventListener('resize', resize);
         resize();
         initSnow();
         drawSnow();
 
-
-        // --- INTERSECTION OBSERVER FOR REVEAL ON SCROLL ---
+        // Scroll Observer
         document.addEventListener('DOMContentLoaded', () => {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
-            };
-
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                    }
+                    if (entry.isIntersecting) entry.target.classList.add('is-visible');
                 });
-            }, observerOptions);
-
-            document.querySelectorAll('.reveal-on-scroll').forEach(el => {
-                observer.observe(el);
-            });
+            }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+            
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
         });
 
-        // --- TILT EFFECT FOR CARDS ---
+        // Tilt
         document.querySelectorAll('.tilt-card').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = ((y - centerY) / centerY) * -5; // Max rotation deg
-                const rotateY = ((x - centerX) / centerX) * 5;
-
+                const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -5;
+                const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 5;
                 card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
             });
-
             card.addEventListener('mouseleave', () => {
                 card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
             });
